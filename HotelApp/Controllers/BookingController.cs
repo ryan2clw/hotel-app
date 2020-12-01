@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HotelApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,6 +16,13 @@ namespace HotelApp.Controllers
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        private readonly IBookingManager _bookingManager;
+
+        // INSTANTIATE SINGLETON SERVICE IN CONTROLLER
+        public BookingController(IBookingManager bookingManager)
+        {
+            _bookingManager = bookingManager;
+        }
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
