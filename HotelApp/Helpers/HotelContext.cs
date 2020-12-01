@@ -10,5 +10,6 @@ namespace HotelApp.Helpers
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite("Data Source=hotel.db");
+
     }
 }
