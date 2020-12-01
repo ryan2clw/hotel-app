@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelApp.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    [Migration("20201201160505_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20201201193715_InitalCreate")]
+    partial class InitalCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,6 @@ namespace HotelApp.Migrations
             modelBuilder.Entity("HotelApp.Models.Booking", b =>
                 {
                     b.Property<int>("BookingId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
@@ -30,12 +29,39 @@ namespace HotelApp.Migrations
                     b.Property<string>("Guest")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Room")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("BookingId");
 
                     b.ToTable("Bookings");
+                });
+
+            modelBuilder.Entity("HotelApp.Models.Room", b =>
+                {
+                    b.Property<int>("RoomId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RoomNumber")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("RoomId");
+
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("HotelApp.Models.Booking", b =>
+                {
+                    b.HasOne("HotelApp.Models.Room", "Room")
+                        .WithOne("Booking")
+                        .HasForeignKey("HotelApp.Models.Booking", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("HotelApp.Models.Room", b =>
+                {
+                    b.Navigation("Booking");
                 });
 #pragma warning restore 612, 618
         }

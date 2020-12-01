@@ -1,4 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 namespace HotelApp.Models
 {
     public class Room
@@ -7,8 +11,7 @@ namespace HotelApp.Models
 
         public int RoomNumber { get; set; }
 
-        public int BookingId { get; set; }
-
         public Booking Booking { get; set; }
+
     }
 }

@@ -15,28 +15,56 @@ namespace HotelApp.Services
         {
             _context = context;
         }
-        public void AddBooking(string guest, int room, DateTime date)
+        public async Task<string> AddBooking(string guest, int roomNumber, DateTime date)
         {
+            var room = _context.Rooms.Where(r => r.RoomNumber == roomNumber).FirstOrDefault();
+
             var booking = new Booking()
             {
                 Guest = guest,
                 Room = room,
                 Date = date
             };
-            // STUB FOR SAVING TO DB
             _context.Bookings.Add(booking);
-            _context.SaveChanges();
-            return;
+            room.Booking = booking;
+            await _context.SaveChangesAsync();
+            return "OK";
         }
         public bool IsRoomAvailable(int room, DateTime date)
         {
             // MARK TO DO: CHECK DB
             return true;
         }
+        private void SeedDataBase()
+        {
+            //List<Room> rooms = new List<Room>();
+            for(var i = 1; i < 100; i++)
+            {
+                Room room = new Room() { RoomNumber = i };
+                //rooms.Add(room);
+                _context.Rooms.Add(room);
+            }
+            //_context.Rooms.AddRange(rooms);
+            _context.SaveChanges();
+        }
         public IEnumerable<Booking> GetAllBookings()
         {
             Booking[] bookings = _context.Bookings.ToArray();
+            List<Room> rooms = _context.Rooms.ToList();
+            if (rooms.Count == 0)
+            {
+                SeedDataBase();
+            }
             return bookings;
+        }
+        public IEnumerable<Room> GetAllRooms()
+        {
+            List<Room> rooms = _context.Rooms.ToList();
+            if (rooms.Count == 0)
+            {
+                SeedDataBase();
+            }
+            return rooms;
         }
 
     }

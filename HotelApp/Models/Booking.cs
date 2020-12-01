@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace HotelApp.Models
 {
     public class Booking
@@ -7,10 +9,8 @@ namespace HotelApp.Models
 
         public string Guest { get; set; }
 
-        public int RoomNumber { get; set; }
-
         public DateTime Date { get; set; }
 
-        public Room BookingRoom { get; set; }
+        public Room Room { get; set; }
     }
 }
