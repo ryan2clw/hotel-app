@@ -59,7 +59,7 @@ namespace HotelApp.Services
         }
         public IEnumerable<Room> GetAllRooms()
         {
-            List<Room> rooms = _context.Rooms.ToList();
+            List<Room> rooms = _context.Rooms.OrderBy(r=>r.RoomNumber).ToList();
             if (rooms.Count == 0)
             {
                 SeedDataBase();
