@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HotelApp.Helpers;
 using HotelApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,7 @@ namespace HotelApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddEntityFrameworkSqlite().AddDbContext<HotelContext>();
             services.AddScoped<IBookingManager, BookingManager>();
         }
 

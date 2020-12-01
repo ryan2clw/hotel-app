@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using HotelApp.Helpers;
 using HotelApp.Models;
 
 namespace HotelApp.Services
 {
     public class BookingManager : IBookingManager
     {
+        private HotelContext _context;
+
+        public BookingManager(HotelContext context)
+        {
+            _context = context;
+        }
         public void AddBooking(string guest, int room, DateTime date)
         {
             var booking = new Booking()
@@ -15,8 +24,8 @@ namespace HotelApp.Services
                 Date = date
             };
             // STUB FOR SAVING TO DB
-            Task<Booking> asyncBookingTask = Task.FromResult(booking);
-            Console.WriteLine(asyncBookingTask.Result);
+            _context.Bookings.Add(booking);
+            _context.SaveChanges();
             return;
         }
         public bool IsRoomAvailable(int room, DateTime date)
@@ -24,5 +33,11 @@ namespace HotelApp.Services
             // MARK TO DO: CHECK DB
             return true;
         }
+        public IEnumerable<Booking> GetAllBookings()
+        {
+            Booking[] bookings = _context.Bookings.ToArray();
+            return bookings;
+        }
+
     }
 }

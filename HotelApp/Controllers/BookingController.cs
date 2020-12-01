@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HotelApp.Models;
 using HotelApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,16 +26,31 @@ namespace HotelApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<Booking> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return _bookingManager.GetAllBookings();
+        }
+        [HttpPost]
+        public ActionResult<string> Post([FromBody] Booking booking)
+        {
+            bool isAvaialble = _bookingManager.IsRoomAvailable(booking.Room, booking.Date);
+            if (isAvaialble)
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                try
+                {
+                    _bookingManager.AddBooking(booking.Guest, booking.Room, booking.Date);
+                    return Ok();
+                } // Send error to FE for user friendly message like Failed to Save
+                catch(Exception e)
+                {
+                    return StatusCode(500, e);
+                }
+
+            }
+            else
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using HotelApp.Models;
+
 namespace HotelApp.Services
 {
     public interface IBookingManager
@@ -11,5 +14,15 @@ namespace HotelApp.Services
         /**
         * Add a booking for the given guest in the given room on the given * date. If the room is not available, throw a suitable Exception. */
         void AddBooking(string guest, int room, DateTime date);
+
+        /**
+         * Return a list of all the available room numbers for the given date
+         */
+        //IEnumerable<int> GetAvailableRooms(DateTime date);
+
+        /**
+         * Since I'm not using SQL SERVER I'll use an endpoint to check my work
+         */
+        IEnumerable<Booking> GetAllBookings();
     }
 }
