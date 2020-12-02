@@ -14,10 +14,13 @@ namespace HotelApp.Helpers
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Room>()
-                .HasOne(r => r.Booking)
-                .WithOne(b => b.Room)
-                .HasForeignKey<Booking>( e => e.BookingId);
+
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.HasOne<Room>()
+                        .WithOne(r => r.Booking)
+                        .HasForeignKey<Booking>(a => a.RoomId);
+            });
         }
 
     }

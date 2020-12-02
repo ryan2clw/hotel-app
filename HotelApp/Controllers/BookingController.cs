@@ -16,10 +16,6 @@ namespace HotelApp.Controllers
     [Route("[controller]")]
     public class BookingController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
         private readonly IBookingManager _bookingManager;
 
         // INSTANTIATE SINGLETON SERVICE IN CONTROLLER
@@ -34,22 +30,22 @@ namespace HotelApp.Controllers
             return _bookingManager.GetAllBookings();
         }
         [HttpGet("rooms")]
-        public IEnumerable<Room> Rooms()
+        public IEnumerable<Room> Rooms(DateTime? date)
         {
-            return _bookingManager.GetAllRooms();
+            return _bookingManager.GetAvailableRooms(date ?? DateTime.Now);
         }
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Post([FromBody] Booking booking)
+        public async Task<ActionResult<string>> Post([FromBody] RoomRequest roomRequest)
         {
-            bool isAvaialble = _bookingManager.IsRoomAvailable(booking.Room.RoomNumber, booking.Date);
+            bool isAvaialble = _bookingManager.IsRoomAvailable(roomRequest.RoomNumber, roomRequest.Date);
             if (isAvaialble)
             {
                 try
                 {
-                    await _bookingManager.AddBooking(booking.Guest, booking.Room.RoomNumber, booking.Date);
+                    await _bookingManager.AddBooking(roomRequest.Guest, roomRequest.RoomNumber, roomRequest.Date);
                     return Ok();
                 } // Send error to FE for user friendly message like Failed to Save
                 catch(Exception e)

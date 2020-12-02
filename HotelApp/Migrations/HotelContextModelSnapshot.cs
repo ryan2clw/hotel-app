@@ -18,16 +18,13 @@ namespace HotelApp.Migrations
 
             modelBuilder.Entity("HotelApp.Models.Booking", b =>
                 {
-                    b.Property<int>("BookingId")
+                    b.Property<int>("RoomId")
                         .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Guest")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("BookingId");
+                    b.HasKey("RoomId");
 
                     b.ToTable("Bookings");
                 });
@@ -37,6 +34,9 @@ namespace HotelApp.Migrations
                     b.Property<int>("RoomId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("RoomNumber")
                         .HasColumnType("INTEGER");
@@ -48,13 +48,11 @@ namespace HotelApp.Migrations
 
             modelBuilder.Entity("HotelApp.Models.Booking", b =>
                 {
-                    b.HasOne("HotelApp.Models.Room", "Room")
+                    b.HasOne("HotelApp.Models.Room", null)
                         .WithOne("Booking")
-                        .HasForeignKey("HotelApp.Models.Booking", "BookingId")
+                        .HasForeignKey("HotelApp.Models.Booking", "RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("HotelApp.Models.Room", b =>

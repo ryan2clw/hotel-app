@@ -19,7 +19,7 @@ namespace HotelApp.Services
         /**
          * Return a list of all the available room numbers for the given date
          */
-        //IEnumerable<int> GetAvailableRooms(DateTime date);
+        IEnumerable<Room> GetAvailableRooms(DateTime date);
 
         /**
          * Since I'm not using SQL SERVER I'll use an endpoint to check my work
