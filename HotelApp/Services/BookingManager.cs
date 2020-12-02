@@ -19,7 +19,10 @@ namespace HotelApp.Services
         public async Task<string> AddBooking(string guest, int roomNumber, DateTime date)
         {
             var room = _context.Rooms.Where(r => r.RoomNumber == roomNumber && r.Date.Date == date.Date).FirstOrDefault();
-
+            if(room == null)
+            {
+                throw new Exception("We could not find a room with that date");
+            }
             var booking = new Booking()
             {
                 Guest = guest,
@@ -34,46 +37,53 @@ namespace HotelApp.Services
         public bool IsRoomAvailable(int room, DateTime date)
         {
             // MARK TO DO: CHECK DB
-            return true;
+            var roomInQuestion = _context.Rooms.Where(r =>
+                    r.RoomNumber == room
+                    && r.Date.Date == date.Date
+                    && r.Booking == null
+                ).FirstOrDefault();
+            return roomInQuestion != null;
         }
         private void SeedDataBase()
         {
-            //List<Room> rooms = new List<Room>();
-            for(var i = 1; i < 100; i++)
+            // 3 floors with 32 rooms, set to todays date
+            for(var i = 1; i < 4; i++)
             {
-                Room room = new Room() { RoomNumber = i, Date = DateTime.Now };
-                //rooms.Add(room);
-                _context.Rooms.Add(room);
+                var roomNumber = 100 * i;
+                for(var j = 1; j < 33; j++)
+                {
+                    Room room = new Room() { RoomNumber = roomNumber + j, Date = DateTime.Now };
+                    _context.Rooms.Add(room);
+                }
             }
-            //_context.Rooms.AddRange(rooms);
             _context.SaveChanges();
         }
-        public IEnumerable<Booking> GetAllBookings()
-        {
-            Booking[] bookings = _context.Bookings.ToArray();
-            List<Room> rooms = _context.Rooms.ToList();
-            if (rooms.Count == 0)
-            {
-                SeedDataBase();
-            }
-            return bookings;
-        }
-        public IEnumerable<Room> GetAllRooms()
-        {
-            List<Room> rooms = _context.Rooms.ToList();
-            if (rooms.Count == 0)
-            {
-                SeedDataBase();
-            }
-            return rooms;
-        }
-        public IEnumerable<Room> GetAvailableRooms(DateTime date)
+        //public IEnumerable<Booking> GetAllBookings()
+        //{
+        //    Booking[] bookings = _context.Bookings.ToArray();
+        //    List<Room> rooms = _context.Rooms.ToList();
+        //    if (rooms.Count == 0)
+        //    {
+        //        SeedDataBase();
+        //    }
+        //    return bookings;
+        //}
+        //public IEnumerable<Room> GetAllRooms()
+        //{
+        //    List<Room> rooms = _context.Rooms.ToList();
+        //    if (rooms.Count == 0)
+        //    {
+        //        SeedDataBase();
+        //    }
+        //    return rooms;
+        //}
+        public IEnumerable<int> GetAvailableRooms(DateTime date)
         {
             List<Room> rooms = _context.Rooms
                                         .Include(a => a.Booking)
                                             .Where(r => r.Booking == null && r.Date.Date == date.Date)
                                                 .OrderBy(r => r.RoomNumber).ToList();
-            return rooms;
+            return rooms.Select(r => r.RoomNumber).ToList();
         }
     }
 }

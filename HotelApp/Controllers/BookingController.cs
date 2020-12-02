@@ -8,8 +8,6 @@ using HotelApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace HotelApp.Controllers
 {
     [ApiController]
@@ -24,16 +22,21 @@ namespace HotelApp.Controllers
             _bookingManager = bookingManager;
         }
 
-        [HttpGet]
-        public IEnumerable<Booking> Get()
-        {
-            return _bookingManager.GetAllBookings();
-        }
+        //[HttpGet]
+        //public IEnumerable<Booking> Get()
+        //{
+        //    return _bookingManager.GetAllBookings();
+        //}
         [HttpGet("rooms")]
-        public IEnumerable<Room> Rooms(DateTime? date)
+        public IEnumerable<int> Rooms(DateTime? date)
         {
             return _bookingManager.GetAvailableRooms(date ?? DateTime.Now);
         }
+        //[HttpGet("all")]
+        //public IEnumerable<Room> All()
+        //{
+        //    return _bookingManager.GetAllRooms().OrderBy(r => r.RoomNumber);
+        //}
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
