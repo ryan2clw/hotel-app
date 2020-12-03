@@ -18,10 +18,13 @@ namespace HotelApp.Services
         }
         public async Task<string> AddBooking(string guest, int roomNumber, DateTime date)
         {
-            var room = _context.Rooms.Where(r => r.RoomNumber == roomNumber && r.Date.Date == date.Date).FirstOrDefault();
+            var room = _context.Rooms.Where(r =>
+                r.RoomNumber == roomNumber
+                && r.Date.Date == date.Date
+                && r.Booking == null).FirstOrDefault();
             if(room == null)
             {
-                throw new Exception("We could not find a room with that date");
+                throw new Exception("We could not find an available room for that date");
             }
             var booking = new Booking()
             {
@@ -36,7 +39,6 @@ namespace HotelApp.Services
         }
         public bool IsRoomAvailable(int room, DateTime date)
         {
-            // MARK TO DO: CHECK DB
             var roomInQuestion = _context.Rooms.Where(r =>
                     r.RoomNumber == room
                     && r.Date.Date == date.Date
@@ -58,31 +60,22 @@ namespace HotelApp.Services
             }
             _context.SaveChanges();
         }
-        //public IEnumerable<Booking> GetAllBookings()
-        //{
-        //    Booking[] bookings = _context.Bookings.ToArray();
-        //    List<Room> rooms = _context.Rooms.ToList();
-        //    if (rooms.Count == 0)
-        //    {
-        //        SeedDataBase();
-        //    }
-        //    return bookings;
-        //}
-        //public IEnumerable<Room> GetAllRooms()
-        //{
-        //    List<Room> rooms = _context.Rooms.ToList();
-        //    if (rooms.Count == 0)
-        //    {
-        //        SeedDataBase();
-        //    }
-        //    return rooms;
-        //}
         public IEnumerable<int> GetAvailableRooms(DateTime date)
         {
+
             List<Room> rooms = _context.Rooms
-                                        .Include(a => a.Booking)
-                                            .Where(r => r.Booking == null && r.Date.Date == date.Date)
-                                                .OrderBy(r => r.RoomNumber).ToList();
+                                    .Include(a => a.Booking)
+                                        .Where(r => r.Booking == null && r.Date.Date == date.Date)
+                                            .OrderBy(r => r.RoomNumber).ToList();
+            var availableRooms = rooms.Select(r => r.RoomNumber).ToList();
+            if(availableRooms.Count == 0)
+            {
+                SeedDataBase();
+                rooms = _context.Rooms
+                            .Include(a => a.Booking)
+                                .Where(r => r.Booking == null && r.Date.Date == date.Date)
+                                    .OrderBy(r => r.RoomNumber).ToList();
+            }
             return rooms.Select(r => r.RoomNumber).ToList();
         }
     }

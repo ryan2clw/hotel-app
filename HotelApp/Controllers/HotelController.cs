@@ -12,32 +12,26 @@ namespace HotelApp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class BookingController : ControllerBase
+    public class HotelController : ControllerBase
     {
         private readonly IBookingManager _bookingManager;
 
         // INSTANTIATE SINGLETON SERVICE IN CONTROLLER
-        public BookingController(IBookingManager bookingManager)
+        public HotelController(IBookingManager bookingManager)
         {
             _bookingManager = bookingManager;
         }
-
-        //[HttpGet]
-        //public IEnumerable<Booking> Get()
-        //{
-        //    return _bookingManager.GetAllBookings();
-        //}
-        [HttpGet("rooms")]
-        public IEnumerable<int> Rooms(DateTime? date)
+        [HttpGet("GetAvailableRooms")]
+        public IEnumerable<int> GetAvailableRooms(DateTime? date)
         {
             return _bookingManager.GetAvailableRooms(date ?? DateTime.Now);
         }
-        //[HttpGet("all")]
-        //public IEnumerable<Room> All()
-        //{
-        //    return _bookingManager.GetAllRooms().OrderBy(r => r.RoomNumber);
-        //}
-        [HttpPost]
+        [HttpGet("IsRoomAvailable")]
+        public bool IsRoomAvailable(int RoomNumber, DateTime date)
+        {
+            return _bookingManager.IsRoomAvailable(RoomNumber, date);
+        }
+        [HttpPost("AddBooking")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

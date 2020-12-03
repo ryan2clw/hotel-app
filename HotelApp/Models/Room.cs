@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace HotelApp.Models
 {
-    public class Room // like Person
+    public class Room
     {
         [JsonIgnore]
         public int RoomId { get; set; }
